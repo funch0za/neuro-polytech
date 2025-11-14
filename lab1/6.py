@@ -1,12 +1,24 @@
+'''
+ Напишите код с циклом, где значение веса будет увеличиваться до тех пор, пока выходное значение меньше 0.5. 
+ Как только один выход стал больше 0.5, то изменение его веса останавливается. 
+ Как только второй выход стал больше 0.5, то изменение его веса также останавливается, а цикл завершается. 
+ Выведите получившиеся веса.
+'''
 def network(inp, weight):
     predict = [0] * len(weight)
-    for i in range(len(weight)):
-        predict[i] = sum([inp[j] * weight[i][j] for j in range(len(inp))])
+    for i in range(len(predict)):
+        predict[i] = inp * weight[i]
     return predict
 
-print("1")
-print(network([50, 165], [[0.2, 0.1], [0.3, 0.1]]))
-print("2")
-print(network([50, 165, 45], [[0.2, 0.1, 0.65], [0.3, 0.1, 0.7]]))
-print("3")
-print(network([50, 165, 45], [[0.2, 0.1, 0.65], [0.3, 0.1, 0.7], [0.5, 0.4, 0.34]]))
+weight = [0.001, 0.5]
+inp = 4
+
+STEP = 0.09
+MAX_PREDICT = 0.5
+predict = network(inp, weight)
+while predict[0] <= MAX_PREDICT or predict[1] <= MAX_PREDICT:
+    weight[0] += STEP if predict[0] <= MAX_PREDICT else 0
+    weight[1] += STEP if predict[1] <= MAX_PREDICT else 0
+    predict = network(inp, weight)
+    
+print(predict)
