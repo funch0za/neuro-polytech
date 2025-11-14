@@ -1,12 +1,9 @@
 def network(inp, weight):
-    predict = [0] * len(weight)
+    predict = 0
     for i in range(len(weight)):
-        predict[i] = sum([inp[j] * weight[i][j] for j in range(len(inp))])
+        predict += weight[i] * inp[i]
     return predict
+out1 = network([150, 40], [0.3, 0.4])
+out2 = network([80, 60], [0.2, 0.4])
+print(out1, out2)
 
-print("1")
-print(network([50, 165], [[0.2, 0.1], [0.3, 0.1]]))
-print("2")
-print(network([50, 165, 45], [[0.2, 0.1, 0.65], [0.3, 0.1, 0.7]]))
-print("3")
-print(network([50, 165, 45], [[0.2, 0.1, 0.65], [0.3, 0.1, 0.7], [0.5, 0.4, 0.34]]))

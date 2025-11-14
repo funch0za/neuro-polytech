@@ -1,9 +1,11 @@
-def network(inp, weight):
-    predict = 0
-    for i in range(len(weight)):
-        predict += weight[i] * inp[i]
-    return predict
-out1 = network([150, 40], [0.3, 0.4])
-out2 = network([80, 60], [0.2, 0.4])
-print(out1, out2)
-
+'''
+Создайте список входных данных (например, inputs = [150, 160, 170, 180, 190]) 
+и используйте цикл for для вычисления выходных данных нейросети для каждого значения в списке. 
+Распечатайте выходные данные для каждого входного значения.
+'''
+def neuralNetwork(inp, weight):
+     prediction = inp * weight
+     return prediction
+inputs = [150, 160, 170, 180, 190]
+for inp in inputs:
+     print(neuralNetwork(inp, 12))
