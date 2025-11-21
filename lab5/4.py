@@ -8,6 +8,7 @@ import numpy as np
 
 weights = np.array([0.2, 0.3])
 
+
 def neural_networks(inp, weights):
     return inp.dot(weights)
 
@@ -27,7 +28,7 @@ def gradient(inp, true_predictions, weights, learning_rate, epochs):
             error += get_error(true_prediction, prediction)
             print("Prediction: %.10f, True_prediction: %.10f, Weights: %s" % (prediction, true_prediction, weights))
             delta += (prediction - true_prediction) * current_inp * learning_rate
-        weights = weights - delta / len(inp)
+        weights -= delta / len(inp)
         print("Errors: %.10f" % error)
         print("-------------------")
     return weights
