@@ -12,22 +12,19 @@ def get_error(true_prediction, prediction):
     return (true_prediction - prediction) ** 2
 
 
-def gradient(inp, weights, true_prediction, count_iters, learning_rate):
+def gradient(inp, weights, true_predictions, count_iters, learning_rate):
     for i in range(count_iters):
         prediction = neural_networks(inp, weights)
-        error = get_error(true_prediction, prediction)
-        print("Prediction: %.10f, Weights: %s, Error: %.20f" %(prediction, weights, error))
-        delta = (prediction - true_prediction) * inp * learning_rate
-        delta[0] = 0
+        error = get_error(true_predictions, prediction)
+        print("Prediction: %s, Weights: %s, Error: %s" %(prediction, weights, error))
+        delta = (prediction - true_predictions) * inp * learning_rate
         weights = weights - delta
 
         
-inp = np.array([150, 40])
+inp = 150
 weights = np.array([0.2,0.3])
 true_predictions = np.array([50,120])
-
+learning_rate = 0.00001
 count_iters = 30
 
-print("1")
-learning_rate = 0.00001
-count_iters = 1000
+gradient(inp, weights, true_predictions, count_iters, learning_rate)
