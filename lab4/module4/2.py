@@ -17,8 +17,8 @@ def gradient(inp, weights, true_predictions, count_iters, learning_rate):
     for i in range(count_iters):
         prediction = neural_networks(inp, weights)
         error = get_error(true_predictions, prediction)
-        #print("Prediction: ", prediction)
-        #print("Weights: ", weights)
+        print("Prediction: ", prediction)
+        print("Weights: ", weights)
         print("Error: ", error)
         delta = (prediction - true_predictions) * inp * learning_rate
         weights = weights - delta
@@ -29,7 +29,7 @@ weights = np.array([[0.2, 0.3],[0.5, 0.7]]).T #Транспонируем дан
 learning_rate = 0.00001
 count_iters = 50
 
-true_predictions = np.array([10, 120])
+true_predictions = np.array([1000, 2000])
 gradient(inp, weights, true_predictions, count_iters, learning_rate)
 print()
 true_predictions = np.array([70, 90])
@@ -37,7 +37,7 @@ true_predictions = np.array([70, 90])
 true_predictions = np.array([30, 110])
 #gradient(inp, weights, true_predictions, count_iters, learning_rate)
 true_predictions = np.array([100, 101])
-gradient(inp, weights, true_predictions, count_iters, learning_rate)
+#gradient(inp, weights, true_predictions, count_iters, learning_rate)
 
 '''
 1) Большое расхождение с предсказаниями
