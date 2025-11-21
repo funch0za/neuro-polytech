@@ -6,7 +6,7 @@
 import numpy as np
 
 def neural_networks(inp, weights):
-    return inp * weights
+    return inp.dot(weights)
 
 
 def get_error(true_prediction, prediction):
