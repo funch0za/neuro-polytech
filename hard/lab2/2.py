@@ -29,6 +29,7 @@ def gradient(inp, true_prediction, weight_hid, weight_out, learning_rate, num_ep
             print("Predictions: %s, true_predictions: %s" %(layer_out, true_prediction[i:i+1]))
         print("Errors: %.4f" % layer_out_error)
         print("----------------------")
+    return weight_hid, weight_hid
 
 
 def neuro_training(inp, true_predict, learning_rate, num_epoch, layer_hid_size):

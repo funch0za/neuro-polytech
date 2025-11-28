@@ -47,7 +47,7 @@ def gradient(epochs, train_img, train_labels, learning_rate, weight_hid, weight_
         current_accuracy = correct_answers * 100 / len(train_img)
         #print("Accuracy: %.2f" %(current_accuracy))
         middle_accuracy += current_accuracy
-    return middle_accuracy / epochs
+    return weight_hid, weight_out, middle_accuracy / epochs
 
 
 def check(test_img, test_labels, weight_hid, weight_out):
@@ -103,7 +103,7 @@ def handwritten_detection(hidden_size, dropout_rate):
     weight_hid = generate_weights(IMG_SIZE, hidden_size)
     weight_out = generate_weights(hidden_size, DIGITS_CNT)
 
-    middle_accuracy = gradient(EPOCHS_CNT, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out, dropout_rate)
+    weight_hid, weight_out, middle_accuracy = gradient(EPOCHS_CNT, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out, dropout_rate)
     check_accuracy = check(test_img, test_labels, weight_hid, weight_out)
     return (middle_accuracy, check_accuracy)
 

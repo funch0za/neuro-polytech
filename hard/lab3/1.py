@@ -33,6 +33,7 @@ def gradient(epochs, train_img, train_labels, learning_rate, weight_hid, weight_
             weight_hid -= learning_rate * layer_in.T.dot(layer_hid_delta)
             print("Epoch: ", i)
             print("Accuracy: %.2f" %(correct_answers * 100 / len(train_img)))
+    return weight_hid, weight_out
 
 
 def check(test_img, test_labels):
@@ -86,5 +87,5 @@ test_labels = preparing_labels(test_labels)
 weight_hid = generate_weights(IMG_SIZE, HIDDEN_SIZE)
 weight_out = generate_weights(HIDDEN_SIZE, DIGITS_CNT)
 
-gradient(EPOCHS_CNT, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out)
+weight_hid, weight_out = gradient(EPOCHS_CNT, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out)
 check(test_img, test_labels)
