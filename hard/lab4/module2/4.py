@@ -1,7 +1,7 @@
 '''
-Попробуйте увеличить количество эпох (num_epochs). 
-Как это влияет на точность модели? 
-Определите оптимальное количество эпох для этой модели.
+Измените архитектуру нейросети, увеличив или уменьшив количество нейронов в скрытом слое.
+Как это влияет на обучение и качество модели? 
+Попробуйте подобрать оптимальное количество нейронов в скрытом слое.
 '''
 
 from keras.src.datasets import mnist
@@ -95,7 +95,7 @@ def generate_weights(input_size, output_size):
     return 0.2 * np.random.random((input_size, output_size)) - 0.1
 
 
-def handwritten_detection(hidden_size, dropout_rate, epochs):
+def handwritten_detection(hidden_size, dropout_rate):
     TRAIN_IMG_CNT = 1000
     TEST_IMG_CNT = 10000
     IMG_SIZE = 28 * 28
@@ -103,6 +103,7 @@ def handwritten_detection(hidden_size, dropout_rate, epochs):
     IMG_DEEP = 255
     BATCH_SIZE = 50
     LEARNING_RATE = 0.01
+    EPOCHS_CNT = 100
 
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -118,7 +119,7 @@ def handwritten_detection(hidden_size, dropout_rate, epochs):
     weight_hid = generate_weights(IMG_SIZE, hidden_size)
     weight_out = generate_weights(hidden_size, DIGITS_CNT)
 
-    middle_accuracy = gradient(epochs, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out, dropout_rate, BATCH_SIZE)
+    middle_accuracy = gradient(EPOCHS_CNT, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out, dropout_rate, BATCH_SIZE)
     check_accuracy = check(test_img, test_labels, weight_hid, weight_out)
     return (middle_accuracy, check_accuracy)
 
@@ -126,16 +127,14 @@ def handwritten_detection(hidden_size, dropout_rate, epochs):
 def run_set(dropout_rate):
     print(f"dropout_rate = {dropout_rate}")
     ans = []
-    sizes = (50, 100)
-    epochs_cnt = (10, 30, 100, 500, 1000)
+    sizes = (50, 100, 10, 15, 250, 500, 1000)
     for size in sizes:
-        for epochs in epochs_cnt:
-            res = handwritten_detection(size, dropout_rate, epochs)
-            if DEBUG_MODE:
-                ans.append(f"epochs = {epochs}, size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
-            else:
-                print(f"epochs = {epochs}, size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
-        
+        res = handwritten_detection(size, dropout_rate)
+        if DEBUG_MODE:
+            ans.append(f"size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
+        else:
+            print(f"size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
+    
     if DEBUG_MODE:
         for i in ans:
             print(i)
@@ -151,7 +150,8 @@ main()
 
 
 '''
-увеличение числа эпох привело к более лучшим результатам
-но, если от 0 к 500 был большой скачок в качестве, 
-то от 500 к 1000 скачок всего лишь на 1 %
+лучший результат
+size = 500, train accuracy = 61.334000000000024, test accuracy = 80.65
+
+поведение очень схоже с предыдущей задачей
 '''
