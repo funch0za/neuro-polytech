@@ -1,6 +1,7 @@
 '''
-Поизменяйте скорость обучения (learning_rate). 
-Как это влияет на сходимость обучения и качество модели?
+Попробуйте увеличить количество эпох (num_epochs). 
+Как это влияет на точность модели? 
+Определите оптимальное количество эпох для этой модели.
 '''
 
 from keras.src.datasets import mnist
@@ -94,14 +95,15 @@ def generate_weights(input_size, output_size):
     return 0.2 * np.random.random((input_size, output_size)) - 0.1
 
 
-def handwritten_detection(hidden_size, dropout_rate, learning_rate):
+def handwritten_detection(hidden_size, dropout_rate, epochs):
     TRAIN_IMG_CNT = 1000
     TEST_IMG_CNT = 10000
     IMG_SIZE = 28 * 28
     DIGITS_CNT = 10 # выходных нейронов столько же
     IMG_DEEP = 255
-    EPOCHS_CNT = 100
     BATCH_SIZE = 50
+    LEARNING_RATE = 0.01
+
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     train_img = x_train[0 : TRAIN_IMG_CNT].reshape(TRAIN_IMG_CNT, IMG_SIZE) / IMG_DEEP
@@ -116,7 +118,7 @@ def handwritten_detection(hidden_size, dropout_rate, learning_rate):
     weight_hid = generate_weights(IMG_SIZE, hidden_size)
     weight_out = generate_weights(hidden_size, DIGITS_CNT)
 
-    middle_accuracy = gradient(EPOCHS_CNT, train_img, train_labels, learning_rate, weight_hid, weight_out, dropout_rate, BATCH_SIZE)
+    middle_accuracy = gradient(epochs, train_img, train_labels, LEARNING_RATE, weight_hid, weight_out, dropout_rate, BATCH_SIZE)
     check_accuracy = check(test_img, test_labels, weight_hid, weight_out)
     return (middle_accuracy, check_accuracy)
 
@@ -125,19 +127,14 @@ def run_set(dropout_rate):
     print(f"dropout_rate = {dropout_rate}")
     ans = []
     sizes = (50, 100, 10, 15, 250, 500, 0)
+    epochs_cnt = (10, 30, 100, 500)
     for size in sizes:
-        learning_rate = 0.1
-        while learning_rate >= 0.00001:
-            res = handwritten_detection(size, dropout_rate, learning_rate)
+        for epochs in epochs_cnt:
+            res = handwritten_detection(size, dropout_rate, epochs)
             if DEBUG_MODE:
-                ans.append(f"size = {size}, learning_rate = {learning_rate}, train accuracy = {res[0]}, test accuracy = {res[1]}")
+                ans.append(f"epochs = {epochs}, size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
             else:
-                print(f"size = {size}, learning_rate = {learning_rate}, train accuracy = {res[0]}, test accuracy = {res[1]}")
-            learning_rate /= 10
-        if DEBUG_MODE:
-            ans.append("\n")
-        else:
-            print()
+                print(f"epochs = {epochs}, size = {size}, train accuracy = {res[0]}, test accuracy = {res[1]}")
         
     if DEBUG_MODE:
         for i in ans:
@@ -154,5 +151,5 @@ main()
 
 
 '''
-c learning_rate = 0.1 показаны лучшие результаты 
+увеличение числа эпох привело к более лучшим результатам
 '''
