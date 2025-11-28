@@ -135,8 +135,8 @@ def run_set(dropout_rate):
 
 def main():
     run_set(0.2)
-    #run_set(0.5)
-    #run_set(0)
-    #run_set(1)
+    run_set(0.5)
+    run_set(0)
+    run_set(1)
 
 main()
