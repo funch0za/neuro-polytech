@@ -1,52 +1,41 @@
+import numpy as np
 from tensor import Tensor
 
-def example_1():
-    print("\n" + "="*50 + "\n")
-    t_1 = Tensor([3, 15, 10])
-    t_2 = Tensor([5, 6, 7])
-    print(f"t_1 = {t_1}")
-    print(f"t_2 = {t_2}")
+print("=" * 60)
+print("ТЕСТ 1: Проверка базовой работы автоградиента")
+print("=" * 60)
 
-    t_3 = t_1 + t_2
-    print(f"t_3 = t_1 + t_2 = {t_3}")
+x = Tensor([1.0, 2.0, 3.0], autograd=True)
+y = Tensor([4.0, 5.0, 6.0], autograd=True)
 
-    t_3.backward(Tensor([1, 2, 3]))
-    print(f"Градиент t_1: {t_1.grad}")
-    print(f"Градиент t_2: {t_2.grad}")
-    print(f"Операция для t_3: {t_3.operation_on_creation}")
+print(f"Тензоры:")
+print(f"  x = {x.data}")
+print(f"  y = {y.data}")
 
+z = x + y
+print(f"\nz = x + y")
+print(f"  z = {z.data}")
+print(f"  Ожидаемый результат: [5. 7. 9.]")
 
-def example_2():
-    print("\n" + "="*50 + "\n")
-    a_1 = Tensor([1, 2, 3])
-    a_2 = Tensor([1, 2, 3])
-    a_3 = Tensor([1, 2, 3])
-    a_4 = Tensor([1, 2, 3])
+print(f"\nСтруктура:")
+print(f"  z.creators: {[creator.id for creator in z.creators]}")
+print(f"  z.operation_on_creation: '{z.operation_on_creation}'")
+print(f"  x.children: {x.children}")
+print(f"  y.children: {y.children}")
 
-    print(f"a_1 = {a_1}")
-    print(f"a_2 = {a_2}")
-    print(f"a_3 = {a_3}")
-    print(f"a_4 = {a_4}")
+print(f"\nbackward для z")
+z.backward()
 
-    a_add_1 = a_1 + a_2
-    print(f"a_add_1 = a_1 + a_2 = {a_add_1}")
+print(f"\nГрадиенты после backward():")
+print(f"  z.grad: {z.grad.data if z.grad is not None else 'None'}")
+print(f"  x.grad: {x.grad.data if x.grad is not None else 'None'}")
+print(f"  y.grad: {y.grad.data if y.grad is not None else 'None'}")
 
-    a_add_2 = a_3 + a_4
-    print(f"a_add_2 = a_3 + a_4 = {a_add_2}")
+expected_grad = np.array([1.0, 1.0, 1.0])
+x_grad_correct = np.array_equal(x.grad.data, expected_grad) if x.grad is not None else False
+y_grad_correct = np.array_equal(y.grad.data, expected_grad) if y.grad is not None else False
 
-    a_add_3 = a_add_1 + a_add_2
-    print(f"a_add_3 = a_add_1 + a_add_2 = {a_add_3}")
+print(f"\nРезультаты проверки:")
+print(f"  Градиент x корректен: {x_grad_correct} (ожидается: {expected_grad})")
+print(f"  Градиент y корректен: {y_grad_correct} (ожидается: {expected_grad})")
 
-    a_add_3.backward(Tensor([4, 5, 3]))
-    print(f"Градиент a_1: {a_1.grad}")
-    print(f"Градиент a_2: {a_2.grad}")
-    print(f"Градиент a_3: {a_3.grad}")
-    print(f"Градиент a_4: {a_4.grad}")
-    print(f"Градиент a_add_1: {a_add_1.grad}")
-    print(f"Градиент a_add_2: {a_add_2.grad}")
-    print(f"Градиент a_add_3: {a_add_3.grad}")
-
-
-
-example_1()
-example_2()

@@ -66,7 +66,7 @@ class Tensor(object):
             if grad_origin is not None and self.children[grad_origin.id] > 0:
                 self.children[grad_origin.id] -= 1
 
-        self.grad = self.grad if self.grad is None else self.grad + grad
+        self.grad = self.grad if grad is None else self.grad + grad
         
         if self.creators is not None and (self.check_grads_from_children() or grad_origin is None) and self.operation_on_creation == "+":   
             self.creators[0].backward(grad, self)
