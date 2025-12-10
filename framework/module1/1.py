@@ -1,7 +1,8 @@
 from tensor import Tensor
 
+
 def example_1():
-    print("\n" + "="*50 + "\n")
+    print("\n" + "=" * 50 + "\n")
     t_1 = Tensor([3, 15, 10])
     t_2 = Tensor([5, 6, 7])
     print(f"t_1 = {t_1}")
@@ -17,7 +18,7 @@ def example_1():
 
 
 def example_2():
-    print("\n" + "="*50 + "\n")
+    print("\n" + "=" * 50 + "\n")
     a_1 = Tensor([1, 2, 3])
     a_2 = Tensor([1, 2, 3])
     a_3 = Tensor([1, 2, 3])
@@ -45,7 +46,6 @@ def example_2():
     print(f"Градиент a_add_1: {a_add_1.grad}")
     print(f"Градиент a_add_2: {a_add_2.grad}")
     print(f"Градиент a_add_3: {a_add_3.grad}")
-
 
 
 example_1()

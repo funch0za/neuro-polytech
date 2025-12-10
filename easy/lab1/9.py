@@ -1,11 +1,14 @@
-'''
+"""
 Выполните предыдущее задание, но с помощью цикла. После цикла выведите получившиеся веса.
-'''
+"""
+
+
 def network(inp, weight):
     predict = [0] * len(weight)
     for i in range(len(weight)):
         predict[i] = sum([inp[j] * weight[i][j] for j in range(len(inp))])
     return predict
+
 
 inp = [50, 165, 45]
 weights_1 = [0.2, 0.1, 0.65]
@@ -28,4 +31,3 @@ for i in range(COUNT):
 
 print(network(inp, weights))
 print(weights)
-

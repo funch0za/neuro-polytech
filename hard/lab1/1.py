@@ -1,8 +1,9 @@
-'''
+"""
 Напишите по памяти код из урока "Скрытые слои и функция ReLu".
-'''
+"""
 
 import numpy as np
+
 
 def get_error(true_prediction, prediction):
     return np.sqrt(np.mean((true_prediction - prediction) ** 2))
@@ -12,12 +13,7 @@ def relu(x):
     return (x > 0) * x
 
 
-inp = np.array([
-[15, 10],
-[15, 15],
-[15, 20],
-[25, 10]
-])
+inp = np.array([[15, 10], [15, 15], [15, 20], [25, 10]])
 true_prediction = np.array([[10, 20, 15, 20]]).T
 
 layer_hid_size = 3
@@ -35,5 +31,3 @@ print(prediction_hid)
 
 prediction = prediction_hid.dot(weights_out)
 print(prediction)
-
-

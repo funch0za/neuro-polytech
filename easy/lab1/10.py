@@ -1,9 +1,10 @@
-'''
-Измените веса нейросети так, 
-чтобы предсказанные значения для второго слоя (prediction_h) стали больше 5. 
-Напишите код, который это сделает. 
+"""
+Измените веса нейросети так,
+чтобы предсказанные значения для второго слоя (prediction_h) стали больше 5.
+Напишите код, который это сделает.
 Выведите получившиеся веса. Само собой, входные данные менять нельзя.
-'''
+"""
+
 
 def network_hidden(inp, weight_i):
     predict = [0] * len(weight_i)
@@ -28,10 +29,16 @@ def network(inp, weight):
 
 inp = [9, 9]
 
-weight_h_1 = [0.4, 0.1] #весовые коэффициенты для первого нейрона скрытого слоя
-weight_h_2 = [0.3, 0.2] #весовые коэффициенты для второго нейрона скрытого слоя
-weight_out_1 = [0.4, 0.1] #весовые коэффициенты для связи нейронов скрытого слоя и выходного
-weight_out_2 = [0.3, 0.1] #весовые коэффициенты для связи нейронов скрытого слоя и выходного
+weight_h_1 = [0.4, 0.1]  # весовые коэффициенты для первого нейрона скрытого слоя
+weight_h_2 = [0.3, 0.2]  # весовые коэффициенты для второго нейрона скрытого слоя
+weight_out_1 = [
+    0.4,
+    0.1,
+]  # весовые коэффициенты для связи нейронов скрытого слоя и выходного
+weight_out_2 = [
+    0.3,
+    0.1,
+]  # весовые коэффициенты для связи нейронов скрытого слоя и выходного
 weights_h = [weight_h_1, weight_h_2]
 weights_out = [weight_out_1, weight_out_2]
 weights = [weights_h, weights_out]
@@ -46,13 +53,13 @@ for i in range(COUNT):
     for j in range(COUNT):
         for k in range(COUNT):
             for m in range(COUNT):
-                new_weight_h_1 = [weight_h_1[0] + i * STEP, weight_h_1[1] + j * STEP] 
-                new_weight_h_2 = [weight_h_2[0] + k * STEP, weight_h_2[1] + m * STEP] 
-                
+                new_weight_h_1 = [weight_h_1[0] + i * STEP, weight_h_1[1] + j * STEP]
+                new_weight_h_2 = [weight_h_2[0] + k * STEP, weight_h_2[1] + m * STEP]
+
                 new_weights_h = [new_weight_h_1, new_weight_h_2]
                 new_weights_out = [weight_out_1, weight_out_2]
                 new_weights = [new_weights_h, new_weights_out]
-                
+
                 predict_h = network_hidden(inp, new_weights[0])
                 if predict_h[0] >= 5 and predict_h[1] >= 5:
                     weights = new_weights
@@ -60,7 +67,7 @@ for i in range(COUNT):
                     j = COUNT
                     k = COUNT
                     m = COUNT
-            
+
 print(weights)
 predict_h = network_hidden(inp, weights[0])
 print(predict_h)

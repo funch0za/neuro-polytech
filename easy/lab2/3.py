@@ -1,8 +1,10 @@
-'''
-Замените списки с фиксированными весами на массивы numpy, 
+"""
+Замените списки с фиксированными весами на массивы numpy,
 причём с генерацией случайных значений в них.
-'''
+"""
+
 import numpy as np
+
 
 def neuralNetwork(inp, weights):
     prediction_h1 = inp.dot(weights[0])
@@ -13,6 +15,7 @@ def neuralNetwork(inp, weights):
 
 def get_random_arr(size):
     return np.random.rand(size)
+
 
 inp = np.array([23, 45])
 
@@ -27,8 +30,8 @@ weight_out_3 = get_random_arr(2)
 weights_h = np.array([weight_h_1, weight_h_2, weight_h_3]).T
 weights_out = np.array([weight_out_1, weight_out_2, weight_out_3]).T
 
-weights_1 = np.array([weight_h_1, weight_h_2]).T     
-weights_2 = np.array([weight_h_3, weight_out_1]).T   
+weights_1 = np.array([weight_h_1, weight_h_2]).T
+weights_2 = np.array([weight_h_3, weight_out_1]).T
 weights_3 = np.array([weight_out_2, weight_out_3]).T
 
 weights = [weights_1, weights_2, weights_3]
