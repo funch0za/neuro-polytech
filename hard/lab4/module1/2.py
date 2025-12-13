@@ -127,7 +127,7 @@ def handwritten_detection(hidden_size, dropout_rate):
 def run_set(dropout_rate):
     print(f"dropout_rate = {dropout_rate}")
     ans = []
-    sizes = (50, 100, 10, 15, 250, 500, 0)
+    sizes = (10,)
     for size in sizes:
         res = handwritten_detection(size, dropout_rate)
         ans.append(

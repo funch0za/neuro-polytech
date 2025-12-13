@@ -35,9 +35,9 @@ def gradient(epochs, train_img, train_labels, learning_rate, weight_hid, weight_
 
             weight_out -= learning_rate * layer_hid.T.dot(layer_out_delta)
             weight_hid -= learning_rate * layer_in.T.dot(layer_hid_delta)
-        print("Epoch: ", i)
+        #print("Epoch: ", i)
         current_accuracy = correct_answers * 100 / len(train_img)
-        print("Accuracy: %.2f" % (current_accuracy))
+        #print("Accuracy: %.2f" % (current_accuracy))
         middle_accuracy += current_accuracy
     return weight_hid, weight_out, middle_accuracy / epochs
 

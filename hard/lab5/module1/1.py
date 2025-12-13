@@ -18,7 +18,7 @@ def sigmoid_deriv(x):
 
 
 def relu(x):
-    return (x < 0) * x
+    return (x > 0) * x
 
 
 def relu_deriv(x):
