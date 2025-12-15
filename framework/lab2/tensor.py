@@ -51,7 +51,7 @@ class Tensor(object):
         if self.autograd and other.autograd:
             return Tensor(self.data + other.data, [self, other], "+", True)
         return Tensor(self.data + other.data)
-    
+
     def __neg__(self):
         """
         Отрицание
@@ -71,7 +71,7 @@ class Tensor(object):
         :param other: другой объект тензора
         """
 
-        if self.autograd:
+        if self.autograd and other.autograd:
             return Tensor(self.data * other.data, [self, other], "*", True)
         return Tensor(self.data * other.data)
 
@@ -83,7 +83,7 @@ class Tensor(object):
         :param other: другой объект тензора
         """
 
-        if self.autograd:
+        if self.autograd and other.autograd:
             return Tensor(self.data - other.data, [self, other], "-", True)
         return Tensor(self.data - other.data)
 
@@ -96,17 +96,32 @@ class Tensor(object):
         """
 
         if self.autograd:
-            return Tensor(self.data.sum(axis), [self], "sum", True)
-        return Tensor(self.data.sum(axis)
+            return Tensor(self.data.sum(axis), [self], "sum_" + str(axis), True)
+        return Tensor(self.data.sum(axis))
 
     def expand(self, axis, count_copies):
         """
-
+        :param self: ссылка на текущий объект
+        :param axis: ось
+        :param count_copies:
         """
-        
-        # записываем индексы элементов тензора с заданной размерностью
-        transpose = list(range(0,len(self.data.shape)))
 
+        # записываем индексы элементов тензора с заданной размерностью
+        transpose = list(range(0, len(self.data.shape)))
+        transpose.insert(axis, len(self.data.shape))
+
+        # определяем размерность будущего тензора после расширения
+        expand_shape = list(self.data.shape) + [count_copies]
+        # повторяем элементы тензора заданное количество раз 
+        # и преобразуем к рассчитанной размерности
+        expand_data = self.data.repeat(count_copies).reshape(expand_shape)
+        # в случае нулевой оси производим транспонирование в соответствии с кортежем, 
+        # иначе не надо его производить.
+        expand_data = expand_data.transpose(transpose)
+
+        if self.autograd:
+            return Tensor(expand_data, [self], "expand_" + str(axis), True)
+        return Tensor(expand_data)
 
     def __str__(self):
         """
@@ -132,12 +147,35 @@ class Tensor(object):
             if (grad_origin is not None) and self.children[grad_origin.id] > 0:
                 self.children[grad_origin.id] -= 1
 
-        self.grad = grad self.grad is None else self.grad + grad
+        self.grad = grad if self.grad is None else self.grad + grad
+        
+        operation = self.operation_on_creation
+        if (self.operation_on_creation is not None) and '_' in self.operation_on_creation:
+            operation, axis = self.operation_on_creation.split('_')
+            axis = int(axis)
 
-        if (self.creators is not None) and (self.check_grads_from_children() or grad_origin is None):
-            if self.operation_on_creation == "+":
-                self.creators[0].backward(grad, self)
-                self.creators[1].backward(grad, self)
+        if (self.creators is not None) and (
+            self.check_grads_from_children() or grad_origin is None
+        ):
+            if operation == "+":
+                self.creators[0].backward(self.grad, self)
+                self.creators[1].backward(self.grad, self)
+            elif operation == "-1":
+                # инверсия градиента
+                self.creators[0].backward(self.grad.__neg__(), self)
+            elif operation == "*":
+                self.creators[0].backward(self.grad * self.creators[1], self)
+                self.creators[1].backward(self.grad * self.creators[0], self)
+            elif operation == "-":
+                self.creators[0].backward(self.grad, self)
+                self.creators[1].backward(self.grad.__neg__(), self)
+            elif operation == "sum":
+                self.creators[0].backward(self.grad.expand(axis, self.creators[0].data.shape[axis]), self)
+            elif operation == "expand":
+                self.creators[0].backward(self.grad.__sum__(axis), self)
+            else:
+                # error
+                pass
 
     def check_grads_from_children(self):
         """
