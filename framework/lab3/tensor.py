@@ -40,6 +40,9 @@ class Tensor(object):
 
         self.creators = creators
 
+    def __repr__(self):
+        return str(self.data.__repr__())
+
     def __add__(self, other):
         """
         Суммирование тензоров
@@ -112,10 +115,10 @@ class Tensor(object):
 
         # определяем размерность будущего тензора после расширения
         expand_shape = list(self.data.shape) + [count_copies]
-        # повторяем элементы тензора заданное количество раз 
+        # повторяем элементы тензора заданное количество раз
         # и преобразуем к рассчитанной размерности
         expand_data = self.data.repeat(count_copies).reshape(expand_shape)
-        # в случае нулевой оси производим транспонирование в соответствии с кортежем, 
+        # в случае нулевой оси производим транспонирование в соответствии с кортежем,
         # иначе не надо его производить.
         expand_data = expand_data.transpose(transpose)
 
@@ -150,7 +153,7 @@ class Tensor(object):
         if self.autograd:
             return Tensor(self.data.transpose(), [self], "transpose", True)
         return Tensor(self.data.transpose())
-    
+
     @staticmethod
     def ones_like(data):
         """
@@ -163,7 +166,7 @@ class Tensor(object):
     def sigmoid_func(data):
         """
         Функция сигмоиды
-        :param data: данные 
+        :param data: данные
         """
         return 1 / (1 + np.exp(-data))
 
@@ -173,7 +176,7 @@ class Tensor(object):
         :param self: ссылка на текущий объект
                      считается что он создан с помощью sigmoid
         """
-        return self * (Tensor.ones_like(self.grad.data) - self) 
+        return self * (Tensor.ones_like(self.grad.data) - self)
 
     def sigmoid(self):
         """
@@ -225,10 +228,12 @@ class Tensor(object):
                 self.children[grad_origin.id] -= 1
 
         self.grad = grad if self.grad is None else self.grad + grad
-        
+
         operation = self.operation_on_creation
-        if (self.operation_on_creation is not None) and '_' in self.operation_on_creation:
-            operation, axis = self.operation_on_creation.split('_')
+        if (
+            self.operation_on_creation is not None
+        ) and "_" in self.operation_on_creation:
+            operation, axis = self.operation_on_creation.split("_")
             axis = int(axis)
 
         if (self.creators is not None) and (
@@ -247,12 +252,18 @@ class Tensor(object):
                 self.creators[0].backward(self.grad, self)
                 self.creators[1].backward(self.grad.__neg__(), self)
             elif operation == "sum":
-                self.creators[0].backward(self.grad.expand(axis, self.creators[0].data.shape[axis]), self)
+                self.creators[0].backward(
+                    self.grad.expand(axis, self.creators[0].data.shape[axis]), self
+                )
             elif operation == "expand":
                 self.creators[0].backward(self.grad.__sum__(axis), self)
             elif operation == "dot":
-                self.creators[0].backward(self.grad.dot(self.creators[1].transpose()), self)
-                self.creators[1].backward(self.grad.transpose().dot(self.creators[0]).transpose(), self)
+                self.creators[0].backward(
+                    self.grad.dot(self.creators[1].transpose()), self
+                )
+                self.creators[1].backward(
+                    self.grad.transpose().dot(self.creators[0]).transpose(), self
+                )
             elif operation == "transpose":
                 self.creators[0].backward(self.grad.transpose(), self)
             elif operation == "tanh":

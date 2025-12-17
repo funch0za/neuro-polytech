@@ -33,7 +33,7 @@ print(
 )
 
 print("-" * 20 + "TEST SIGMOID" + "-" * 20)
-a_1 = Tensor([[1,2,3], [4,5,6]], autograd=True)
+a_1 = Tensor([[1, 2, 3], [4, 5, 6]], autograd=True)
 a_3 = a_1.sigmoid()
 a_3.backward(Tensor([4, 5, 10]))
 print(
@@ -51,9 +51,9 @@ print(
 
 
 print("-" * 20 + "TEST TANH" + "-" * 20)
-a_2 = Tensor([[2,3,4],[2,3,5]], autograd=True)
+a_2 = Tensor([[2, 3, 4], [2, 3, 5]], autograd=True)
 a_4 = a_2.tanh()
-a_4.backward(Tensor([4,5,10]))
+a_4.backward(Tensor([4, 5, 10]))
 
 print(
     "a_2 = ",
@@ -64,5 +64,5 @@ print(
     a_3,
     "a_2.grad = ",
     a_2.grad,
-    sep="\n"
+    sep="\n",
 )
