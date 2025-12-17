@@ -150,6 +150,64 @@ class Tensor(object):
         if self.autograd:
             return Tensor(self.data.transpose(), [self], "transpose", True)
         return Tensor(self.data.transpose())
+    
+    @staticmethod
+    def ones_like(data):
+        """
+        Возвращает единичный тензор с размерностью матрицы data
+        :param self: матрица
+        """
+        return Tensor(np.ones_like(data))
+
+    @staticmethod
+    def sigmoid_func(data):
+        """
+        Функция сигмоиды
+        :param data: данные 
+        """
+        return 1 / (1 + np.exp(-data))
+
+    def sigmoid_deriv(self):
+        """
+        Производная сигмоиды
+        :param self: ссылка на текущий объект
+                     считается что он создан с помощью sigmoid
+        """
+        return self * (Tensor.ones_like(self.grad.data) - self) 
+
+    def sigmoid(self):
+        """
+        Функция сигмоиды
+        :param self: ссылка не текущий объект
+        """
+        if self.autograd:
+            return Tensor(Tensor.sigmoid_func(self.data), [self], "sigmoid", True)
+        return Tensor(Tensor.sigmoid_func(self.data))
+
+    @staticmethod
+    def tanh_func(data):
+        """
+        Гиперболлический тангенс
+        :param data: данные
+        """
+        return np.tanh(data)
+
+    def tanh_deriv(self):
+        """
+        Производная гиперболлического тангенса
+        :param self: ссылка на текущий объект
+                     считается что он создан с помощью tanh
+        """
+        return Tensor.ones_like(self.grad.data) - self * self
+
+    def tanh(self):
+        """
+        Гиперболлический тангенс
+        :param self: ссылка на текущий объект
+        """
+        if self.autograd:
+            return Tensor(Tensor.tanh_func(self.data), [self], "tanh", True)
+        return Tensor(Tensor.tanh_func(self.data))
 
     def backward(self, grad=None, grad_origin=None):
         """
@@ -193,10 +251,15 @@ class Tensor(object):
             elif operation == "expand":
                 self.creators[0].backward(self.grad.__sum__(axis), self)
             elif operation == "dot":
-                self.creators[0].backward(self.grad.dot(self.creators[1].transpose(), self))
+                self.creators[0].backward(self.grad.dot(self.creators[1].transpose()), self)
                 self.creators[1].backward(self.grad.transpose().dot(self.creators[0]).transpose(), self)
             elif operation == "transpose":
                 self.creators[0].backward(self.grad.transpose(), self)
+            elif operation == "tanh":
+                self.creators[0].backward(self.grad * self.tanh_deriv(), self)
+            elif operation == "sigmoid":
+                temp = Tensor(np.ones_like(self.grad.data))
+                self.creators[0].backward(self.grad * self.sigmoid_deriv(), self)
             else:
                 # error
                 pass
