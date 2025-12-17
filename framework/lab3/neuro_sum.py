@@ -27,7 +27,8 @@ for i in range(num_epochs):
     sgd.step()
     print("Error: ", error)
 
-print(weights)
+print("weights = ", weights)
 
 print(Tensor([3, 4]).dot(weights[0]).dot(weights[1]))
+
 
