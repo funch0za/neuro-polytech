@@ -78,6 +78,9 @@ class Tensor(object):
             return Tensor(self.data * other.data, [self, other], "*", True)
         return Tensor(self.data * other.data)
 
+    def __gt__(self, other):
+        return self.data.__gt__(other.data)
+
     def __sub__(self, other):
         """
         Вычитание тензоров
@@ -163,6 +166,10 @@ class Tensor(object):
         return Tensor(np.ones_like(data))
 
     @staticmethod
+    def zeros_like(data):
+        return 0
+
+    @staticmethod
     def sigmoid_func(data):
         """
         Функция сигмоиды
@@ -211,6 +218,33 @@ class Tensor(object):
         if self.autograd:
             return Tensor(Tensor.tanh_func(self.data), [self], "tanh", True)
         return Tensor(Tensor.tanh_func(self.data))
+
+    @staticmethod
+    def relu_func(data):
+        """
+        ReLU
+
+        :param data: данные
+        """
+        return np.maximum(0, data)
+
+    def relu_deriv(self):
+        """
+        Производная ReLU
+        :param self: ссылка на текущий объект 
+        """
+        return self > np.zeros(self.grad.data.shape)
+
+    def relu(self):
+        """
+        ReLU
+
+        :param self: ссылка на текущий объект
+        """
+
+        if self.autograd:
+            return Tensor(Tensor.relu_func(self.data), [self], "relu", True)
+        return Tensor(Tensor.relu_func(self.data))
 
     def backward(self, grad=None, grad_origin=None):
         """
@@ -269,8 +303,9 @@ class Tensor(object):
             elif operation == "tanh":
                 self.creators[0].backward(self.grad * self.tanh_deriv(), self)
             elif operation == "sigmoid":
-                temp = Tensor(np.ones_like(self.grad.data))
                 self.creators[0].backward(self.grad * self.sigmoid_deriv(), self)
+            elif operation == "relu":
+                self.creators[0].backward(self.grad * self.relu_deriv(), self)
             else:
                 # error
                 pass
