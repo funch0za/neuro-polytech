@@ -1,4 +1,5 @@
 from layer import Layer
+import numpy as np
 
 class RMSELoss(Layer):
     def forward(self, prediction, true_prediction):
